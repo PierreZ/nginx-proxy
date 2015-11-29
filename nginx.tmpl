@@ -97,7 +97,10 @@ upstream {{ $host }} {
 {{/* Get the first cert name defined by containers w/ the same vhost */}}
 {{ $certName := (first (groupByKeys $containers "Env.CERT_NAME")) }}
 
-{{ if (and (ne $cert "") (exists (printf "/etc/nginx/certs/%s.crt" $certName)) (exists (printf "/etc/nginx/certs/%s.key" $certName))) }}
+{{/* Use the cert specifid on the container or fallback to the best vhost match */}}
+{{ $cert := $certName }}
+
+{{ if (and (ne $cert "") (exists (printf "/etc/letsencrypt/live/%s/fullchain.pem" $cert)) (exists (printf "/etc/letsencrypt/live/%s/privkey.pem" $cert))) }}
 
 server {
 	server_name {{ $host }};
