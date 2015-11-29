@@ -128,8 +128,9 @@ server {
 	ssl_session_timeout 5m;
 	ssl_session_cache shared:SSL:50m;
 
-	ssl_certificate /etc/nginx/certs/{{ (printf "%s.crt" $cert) }};
-	ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $cert) }};
+	ssl_certificate /etc/letsencrypt/live/{{ (printf "%s" $cert) }}/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/{{ (printf "%s" $cert)
+    }}/privkey.pem;
 
 	{{ if (exists (printf "/etc/nginx/certs/%s.dhparam.pem" $cert)) }}
 	ssl_dhparam {{ printf "/etc/nginx/certs/%s.dhparam.pem" $cert }};
